@@ -1,0 +1,23 @@
+schedules:
+- cron: "0 */3 * * *"
+  displayName: "Build OWASP cache every 3 hours"
+  branches:
+    include:
+    - master
+  always: true
+
+pool:
+  vmImage: ubuntu-16.04
+
+steps:
+  - script: |
+      curl -sfL -o $(system.defaultWorkingDirectory)/dependency-check.zip https://dl.bintray.com/jeremy-long/owasp/dependency-check-5.1.0-release.zip
+      unzip $(system.defaultWorkingDirectory)/dependency-check.zip -d $(system.defaultWorkingDirectory)
+      $(system.defaultWorkingDirectory)/dependency-check/bin/dependency-check.sh --updateonly --data $(Pipeline.Workspace)/owasp-cache
+    displayName: 'Update OWASP cache'
+  
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish OWASP cache'
+    inputs:
+      targetPath: '$(Pipeline.Workspace)/owasp-cache'
+      artifact: 'OWASP-dependency-check-cache'
