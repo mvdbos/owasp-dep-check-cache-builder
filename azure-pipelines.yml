@@ -10,14 +10,28 @@ pool:
   vmImage: ubuntu-16.04
 
 steps:
+  - task: DownloadGitHubRelease@0
+    displayName: 'Download cache from release on GitHub'
+    inputs:
+      connection: GitHub
+      userRepository: '$(Build.Repository.Name)'
+      defaultVersionType: 'specificTag'
+      version: 'latest'
+
   - script: |
       curl -sfL -o $(system.defaultWorkingDirectory)/dependency-check.zip https://dl.bintray.com/jeremy-long/owasp/dependency-check-5.1.0-release.zip
       unzip $(system.defaultWorkingDirectory)/dependency-check.zip -d $(system.defaultWorkingDirectory)
-      $(system.defaultWorkingDirectory)/dependency-check/bin/dependency-check.sh --updateonly --data $(Pipeline.Workspace)/owasp-cache
+      $(system.defaultWorkingDirectory)/dependency-check/bin/dependency-check.sh --updateonly --data $(System.ArtifactsDirectory)
     displayName: 'Update OWASP cache'
   
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish OWASP cache'
+  - task: GitHubRelease@0
+    displayName: 'Update release on GitHub'
     inputs:
-      targetPath: '$(Pipeline.Workspace)/owasp-cache'
-      artifact: 'OWASP-dependency-check-cache'
+      gitHubConnection: GitHub
+      repositoryName: '$(Build.Repository.Name)' 
+      action: 'edit' # Options: create, edit, delete
+      target: '$(Build.SourceVersion)' # Required when action == Create || Action == Edit
+      tag: 'latest'
+      assets: '$(System.ArtifactsDirectory)/*'
+      assetUploadMode: 'delete' 
+      addChangeLog: false
