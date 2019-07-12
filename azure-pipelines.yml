@@ -1,5 +1,5 @@
 schedules:
-- cron: "0 */3 * * *"
+- cron: "0 3,6,9,12,15,18,21 * * *"
   displayName: "Build OWASP Dependency Check cache every 3 hours"
   branches:
     include:
