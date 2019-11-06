@@ -15,8 +15,8 @@ steps:
     inputs:
       connection: GitHub
       userRepository: '$(Build.Repository.Name)'
-      defaultVersionType: 'latest'
-      version: 'latest'
+      defaultVersionType: 'SpecificTag'
+      version: 'v1.0'
 
   - script: |
       curl -sfL -o $(system.defaultWorkingDirectory)/dependency-check.zip https://dl.bintray.com/jeremy-long/owasp/dependency-check-5.1.0-release.zip
@@ -31,7 +31,7 @@ steps:
       repositoryName: '$(Build.Repository.Name)' 
       action: 'edit' # Options: create, edit, delete
       target: '$(Build.SourceVersion)' # Required when action == Create || Action == Edit
-      tag: 'latest'
+      tag: 'v1.0'
       assets: '$(System.ArtifactsDirectory)/*'
       assetUploadMode: 'delete' 
       addChangeLog: false
