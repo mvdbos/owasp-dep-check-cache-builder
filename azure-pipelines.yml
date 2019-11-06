@@ -16,7 +16,7 @@ steps:
       connection: GitHub
       userRepository: '$(Build.Repository.Name)'
       defaultVersionType: 'latest'
-      version: ''
+      version: 'latest'
 
   - script: |
       curl -sfL -o $(system.defaultWorkingDirectory)/dependency-check.zip https://dl.bintray.com/jeremy-long/owasp/dependency-check-5.1.0-release.zip
