@@ -13,10 +13,11 @@ steps:
   - task: DownloadGitHubRelease@0
     displayName: 'Download cache from release on GitHub'
     inputs:
-      connection: GitHub
-      userRepository: '$(Build.Repository.Name)'
-      defaultVersionType: 'specificVersion'
+      connection: 'github.com_mvdbos'
+      userRepository: 'mvdbos/owasp-dep-check-cache-builder'
+      defaultVersionType: 'specificTag'
       version: 'v1.0'
+      downloadPath: '$(System.ArtifactsDirectory)'
 
   - script: |
       curl -sfL -o $(system.defaultWorkingDirectory)/dependency-check.zip https://dl.bintray.com/jeremy-long/owasp/dependency-check-5.1.0-release.zip
